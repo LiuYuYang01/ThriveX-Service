@@ -6,16 +6,14 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import liuyuyang.net.execption.CustomException;
 import liuyuyang.net.mapper.ArticleMapper;
 import liuyuyang.net.mapper.CommentMapper;
-import liuyuyang.net.mapper.ProjectMapper;
 import liuyuyang.net.model.Article;
 import liuyuyang.net.model.Comment;
-import liuyuyang.net.model.Project;
 import liuyuyang.net.service.CommentService;
+import liuyuyang.net.service.ConfigService;
 import liuyuyang.net.utils.EmailUtils;
 import liuyuyang.net.utils.YuYangUtils;
 import liuyuyang.net.vo.PageVo;
 import liuyuyang.net.vo.comment.CommentFilterVo;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.TemplateEngine;
@@ -42,7 +40,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     @Resource
     private ArticleMapper articleMapper;
     @Resource
-    private ProjectMapper projectMapper;
+    private ConfigService configService;
 
     @Override
     public void add(Comment comment) throws Exception {
@@ -75,9 +73,9 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         context.setVariable("content", content.toString());
 
         // 获取url
-        Project config = projectMapper.selectById(1);
-        String url = String.format("%s/article/%d", config.getUrl(), comment.getArticleId());
-        context.setVariable("url", url);
+        String url = (String) configService.get("url");
+        String path = String.format("%s/article/%d", url, comment.getArticleId());
+        context.setVariable("url", path);
 
         String template = templateEngine.process("comment_email", context);
 

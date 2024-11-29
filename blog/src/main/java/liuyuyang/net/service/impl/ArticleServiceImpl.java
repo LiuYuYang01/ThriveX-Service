@@ -171,7 +171,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         String description = data.getDescription();
         String content = data.getContent();
 
-        Boolean isAdmin = yuYangUtils.isAdmin(token);
+        Boolean isAdmin = !"".equals(token) && yuYangUtils.isAdmin(token);
 
         ArticleConfig config = data.getConfig();
 

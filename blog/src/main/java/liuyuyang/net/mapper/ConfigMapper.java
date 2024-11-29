@@ -1,10 +1,10 @@
 package liuyuyang.net.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import liuyuyang.net.model.Project;
+import liuyuyang.net.model.Config;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
-public interface ProjectMapper extends BaseMapper<Project> {
+public interface ConfigMapper extends BaseMapper<Config> {
 
 }
