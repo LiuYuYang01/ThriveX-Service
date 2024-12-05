@@ -14,6 +14,8 @@ import liuyuyang.net.utils.EmailUtils;
 import liuyuyang.net.utils.YuYangUtils;
 import liuyuyang.net.vo.PageVo;
 import liuyuyang.net.vo.comment.CommentFilterVo;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.TemplateEngine;
@@ -28,6 +30,7 @@ import java.util.Objects;
 
 @Service
 @Transactional
+@Slf4j
 public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> implements CommentService {
     @Resource
     private EmailUtils emailUtils;
@@ -112,7 +115,9 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     @Override
     public List<Comment> list(CommentFilterVo filterVo) {
         QueryWrapper<Comment> queryWrapper = yuYangUtils.queryWrapperFilter(filterVo, "name");
-        queryWrapper.eq("audit_status", filterVo.getStatus());
+        if (filterVo.getStatus() != null) {
+            queryWrapper.eq("audit_status", filterVo.getStatus());
+        }
         if (filterVo.getContent() != null && !filterVo.getContent().isEmpty()) {
             queryWrapper.like("content", filterVo.getContent());
         }
