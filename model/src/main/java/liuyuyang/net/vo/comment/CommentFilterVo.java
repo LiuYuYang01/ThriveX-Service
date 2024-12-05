@@ -10,7 +10,7 @@ public class CommentFilterVo extends FilterVo {
     private String pattern;
 
     @ApiModelProperty(value = "0表示获取待审核的评论 | 1表示获取审核通过的评论（默认）")
-    private Integer status = 1;
+    private Integer status;
 
     @ApiModelProperty(value = "根据内容关键词筛选")
     private String content;

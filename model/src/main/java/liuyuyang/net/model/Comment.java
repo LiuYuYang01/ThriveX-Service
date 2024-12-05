@@ -44,5 +44,5 @@ public class Comment extends BaseModel {
     private List<Comment> children = new ArrayList<>();
 
     @ApiModelProperty(value = "评论是否审核通过", example = "1")
-    private Integer auditStatus;
+    private Integer auditStatus = 1;
 }
