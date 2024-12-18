@@ -27,7 +27,7 @@ public class OssController {
     @ApiOperation("新增oss配置")
     @ApiOperationSupport(author = "laifeng", order = 1)
     public Result<String> add(@RequestBody Oss oss) {
-        ossService.save(oss);
+        ossService.saveOss(oss);
         return Result.success();
     }
 
@@ -36,6 +36,8 @@ public class OssController {
     @ApiOperationSupport(author = "laifeng", order = 2)
     public Result<String> update(@RequestBody Oss oss) {
         if (oss.getIsEnable() == 1) return Result.error("删除oss配置失败：该配置正在使用中");
+        // 不允许更改平台
+        oss.setPlatform(null);
         ossService.updateById(oss);
         return Result.success();
     }
@@ -47,7 +49,7 @@ public class OssController {
         Oss oss = ossService.getById(id);
         if (oss == null) return Result.error("删除oss配置失败：该配置不存在");
         if (oss.getIsEnable() == 1) return Result.error("删除oss配置失败：该配置正在使用中");
-        ossService.removeById(id);
+        ossService.delOss(id);
         return Result.success();
     }
 

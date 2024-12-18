@@ -19,4 +19,15 @@ public interface OssService extends IService<Oss> {
     Oss getEnableOss();
 
     void disable(Integer id);
+
+    /**
+     * 删除
+     */
+    void delOss(Integer id);
+
+    /**
+     * 新增
+     * @param oss
+     */
+    void saveOss(Oss oss);
 }

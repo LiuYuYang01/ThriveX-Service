@@ -49,10 +49,12 @@ public class OssUtil {
         config.setBucketName(oss.getBucketName());
         config.setDomain(oss.getDomain());
         config.setBasePath(oss.getBasePath());
+        removeStorage(list, oss.getPlatform());
 
         // TODO 其它更多配置
         list.addAll(FileStorageServiceBuilder.buildHuaweiObsFileStorage(Collections.singletonList(config), null));
     }
+
 
     /**
      * 将阿里云配置信息设置到存储平台
@@ -67,6 +69,7 @@ public class OssUtil {
         config.setBucketName(oss.getBucketName());
         config.setDomain(oss.getDomain());
         config.setBasePath(oss.getBasePath());
+        removeStorage(list, oss.getPlatform());
 
         list.addAll(FileStorageServiceBuilder.buildAliyunOssFileStorage(Collections.singletonList(config), null));
     }
@@ -83,6 +86,7 @@ public class OssUtil {
         config.setBucketName(oss.getBucketName());
         config.setDomain(oss.getDomain());
         config.setBasePath(oss.getBasePath());
+        removeStorage(list, oss.getPlatform());
         list.addAll(FileStorageServiceBuilder.buildQiniuKodoFileStorage(Collections.singletonList(config), null));
     }
 
@@ -99,6 +103,7 @@ public class OssUtil {
         config.setRegion(oss.getEndPoint());
         config.setDomain(oss.getDomain());
         config.setBasePath(oss.getBasePath());
+        removeStorage(list, oss.getPlatform());
 
         list.addAll(FileStorageServiceBuilder.buildTencentCosFileStorage(Collections.singletonList(config), null));
     }
@@ -116,6 +121,7 @@ public class OssUtil {
         config.setBucketName(oss.getBucketName());
         config.setDomain(oss.getDomain());
         config.setBasePath(oss.getBasePath());
+        removeStorage(list, oss.getPlatform());
 
         list.addAll(FileStorageServiceBuilder.buildMinioFileStorage(Collections.singletonList(config), null));
     }
@@ -146,5 +152,24 @@ public class OssUtil {
                 return;
         }
         throw new RuntimeException("暂不支持该平台");
+    }
+
+    /**
+     * 获取存储平台
+     */
+    public static CopyOnWriteArrayList<FileStorage> getStorageList() {
+        return fileStorageService.getFileStorageList();
+    }
+
+    /**
+     * 删除旧的存储平台
+     */
+    public static void removeStorage(CopyOnWriteArrayList<FileStorage> list, String platform) {
+        //删除
+        FileStorage myStorage = fileStorageService.getFileStorage(platform);
+        if (myStorage != null) {
+            list.remove(myStorage);
+            myStorage.close();//释放资源
+        }
     }
 }
