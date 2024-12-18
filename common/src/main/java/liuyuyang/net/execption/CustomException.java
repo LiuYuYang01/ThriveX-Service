@@ -1,7 +1,9 @@
 package liuyuyang.net.execption;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class CustomException extends RuntimeException {
     private Integer code;
@@ -23,6 +25,7 @@ public class CustomException extends RuntimeException {
     public CustomException(String message) {
         super(message);
         this.code = 400;
+        this.message = message;
     }
 
     @Override
