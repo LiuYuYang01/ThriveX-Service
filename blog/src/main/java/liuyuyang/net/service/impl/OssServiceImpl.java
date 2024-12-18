@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import liuyuyang.net.execption.CustomException;
 import liuyuyang.net.mapper.OssMapper;
 import liuyuyang.net.model.Oss;
 import liuyuyang.net.service.OssService;
@@ -35,13 +36,13 @@ public class OssServiceImpl extends ServiceImpl<OssMapper, Oss> implements OssSe
         // 先禁用所有的配置
         boolean temp1 = this.update(Wrappers.<Oss>update().lambda().set(Oss::getIsEnable, 0));
         if (!temp1) {
-            throw new RuntimeException("更新失败");
+            throw new CustomException("操作失败");
         }
 
         // 再启用制定的配置
         boolean temp2 = this.update(Wrappers.<Oss>update().lambda().set(Oss::getIsEnable, 1).eq(Oss::getId, id));
         if (!temp2) {
-            throw new RuntimeException("更新失败");
+            throw new CustomException("操作失败");
         }
 
         Oss oss = this.getById(id);
@@ -58,8 +59,21 @@ public class OssServiceImpl extends ServiceImpl<OssMapper, Oss> implements OssSe
     public void disable(Integer id) {
         boolean temp1 = this.update(Wrappers.<Oss>update().lambda().set(Oss::getIsEnable, 0));
         if (!temp1) {
-            throw new RuntimeException("更新失败");
+            throw new CustomException("更新失败");
         }
+        OssUtil.removeStorage(OssUtil.getStorageList(), OssUtil.getPlatform());
         OssUtil.setPlatformToDefault();
+    }
+
+    @Override
+    public void delOss(Integer id) {
+        Oss oss = this.getById(id);
+        if (oss == null) {
+            throw new CustomException("删除失败");
+        }
+        boolean result = this.removeById(id);
+        if (result){
+            OssUtil.removeStorage(OssUtil.getStorageList(), oss.getPlatform());
+        }
     }
 }

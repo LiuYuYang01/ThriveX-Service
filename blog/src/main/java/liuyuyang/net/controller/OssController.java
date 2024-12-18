@@ -47,7 +47,7 @@ public class OssController {
         Oss oss = ossService.getById(id);
         if (oss == null) return Result.error("删除oss配置失败：该配置不存在");
         if (oss.getIsEnable() == 1) return Result.error("删除oss配置失败：该配置正在使用中");
-        ossService.removeById(id);
+        ossService.delOss(id);
         return Result.success();
     }
 
