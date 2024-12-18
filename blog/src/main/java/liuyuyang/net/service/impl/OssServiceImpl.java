@@ -72,8 +72,20 @@ public class OssServiceImpl extends ServiceImpl<OssMapper, Oss> implements OssSe
             throw new CustomException("删除失败");
         }
         boolean result = this.removeById(id);
-        if (result){
+        if (result) {
             OssUtil.removeStorage(OssUtil.getStorageList(), oss.getPlatform());
         }
+    }
+
+    @Override
+    public void saveOss(Oss oss) {
+        // 判断是否有重复
+        Integer count = this.lambdaQuery()
+                .eq(Oss::getPlatform, oss.getPlatform())
+                .count();
+        if (count > 0) {
+            throw new CustomException("平台已存在");
+        }
+        this.save(oss);
     }
 }
